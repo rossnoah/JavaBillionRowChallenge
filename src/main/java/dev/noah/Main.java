@@ -55,15 +55,54 @@ public class Main {
     public static void processLine(Map<String, Data> map, String input) {
         String[] stings = input.split(";");
         String id = stings[0];
-        double value = Double.parseDouble(stings[1]);
+//        float value = Float.parseFloat(stings[1]);
+        char[] chars = stings[1].toCharArray();
 
+        boolean hasSign = chars[0] == '-';
+
+
+        float value;
+
+        int digit1, digit2, digit3;
+
+
+        if(hasSign){
+            if(chars.length==5){
+                 digit1 = chars[1];
+                 digit2 = chars[2];
+                 digit3 = chars[4];
+
+                 value = (float) (digit1*10 + digit2 + 0.1*digit3) * -1;
+            }else{
+                 digit1 = chars[1];
+                 digit2 = chars[3];
+
+                value = (float) (digit1 + 0.1* digit2) * -1;
+
+            }
+
+
+
+        }else if (chars.length == 4) {
+            digit1 = chars[0];
+            digit2 = chars[1];
+            digit3 = chars[3];
+
+            value = (float) (digit1 * 10 + digit2 + 0.1 * digit3);
+        } else {
+            digit1 = chars[0];
+            digit2 = chars[2];
+
+            value = (float) (digit1 + 0.1 * digit2);
+
+        }
 
         addData(map, id, value);
 
     }
 
 
-    private static void addData(Map<String, Data> map, String id, double value) {
+    private static void addData(Map<String, Data> map, String id, float value) {
         Data data = map.getOrDefault(id, new Data());
 
         data.total += value;
