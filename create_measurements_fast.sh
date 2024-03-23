@@ -16,4 +16,4 @@
 #
 
 
-java --class-path target/billionrowchallenge-1.0-SNAPSHOT.jar dev.morling.onebrc.CreateMeasurementsFast $1
+java -Xmx12G --class-path target/billionrowchallenge-1.0-SNAPSHOT.jar dev.morling.onebrc.CreateMeasurementsFast $1
