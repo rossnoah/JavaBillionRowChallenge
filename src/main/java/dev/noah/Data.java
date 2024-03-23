@@ -2,9 +2,9 @@ package dev.noah;
 
 public class Data {
     public int count;
-    public double min;
-    public double max;
-    public double total;
+    public int min;
+    public int max;
+    public int total;
 
     public Data(){
         count = 0;

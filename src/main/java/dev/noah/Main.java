@@ -19,7 +19,7 @@ public class Main {
         long totalTime = endTime - startTime;
 
 
-        System.out.println("Total time in ms " + totalTime);
+        System.out.println("Total time in  ms " + totalTime);
 
     }
 
@@ -55,13 +55,12 @@ public class Main {
     public static void processLine(Map<String, Data> map, String input) {
         String[] stings = input.split(";");
         String id = stings[0];
-//        float value = Float.parseFloat(stings[1]);
         char[] chars = stings[1].toCharArray();
 
         boolean hasSign = chars[0] == '-';
 
 
-        float value;
+        int value;
 
         int digit1, digit2, digit3;
 
@@ -72,15 +71,14 @@ public class Main {
                  digit2 = chars[2];
                  digit3 = chars[4];
 
-                 value = (float) (digit1*10 + digit2 + 0.1*digit3) * -1;
+                 value =(digit1*100 + digit2*10 + digit3) * -1;
             }else{
                  digit1 = chars[1];
                  digit2 = chars[3];
 
-                value = (float) (digit1 + 0.1* digit2) * -1;
+                value =(digit1*100 + digit2*10) * -1;
 
             }
-
 
 
         }else if (chars.length == 4) {
@@ -88,12 +86,12 @@ public class Main {
             digit2 = chars[1];
             digit3 = chars[3];
 
-            value = (float) (digit1 * 10 + digit2 + 0.1 * digit3);
+            value =(digit1*100 + digit2*10 + digit3) ;
         } else {
             digit1 = chars[0];
             digit2 = chars[2];
 
-            value = (float) (digit1 + 0.1 * digit2);
+            value =(digit1*100 + digit2*10);
 
         }
 
@@ -102,7 +100,7 @@ public class Main {
     }
 
 
-    private static void addData(Map<String, Data> map, String id, float value) {
+    private static void addData(Map<String, Data> map, String id, int value) {
         Data data = map.getOrDefault(id, new Data());
 
         data.total += value;
@@ -131,11 +129,11 @@ public class Main {
 
             sb.append(id)
                     .append("=")
-                    .append(data.min)
+                    .append(data.min/10)
                     .append("/")
-                    .append(data.total / data.count)
+                    .append((data.total / data.count)/10)
                     .append("/")
-                    .append(data.max);
+                    .append(data.max/10);
             if (index[0] < map.size() - 1) {
                 sb.append(",");//we should skip this on the last one
             }
