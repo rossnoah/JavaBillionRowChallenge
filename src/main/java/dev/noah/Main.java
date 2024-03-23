@@ -19,7 +19,7 @@ public class Main {
         long totalTime = endTime - startTime;
 
 
-        System.out.println("Total time in seconds " + totalTime / 1000);
+        System.out.println("Total time in ms " + totalTime);
 
     }
 
