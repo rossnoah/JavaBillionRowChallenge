@@ -94,7 +94,7 @@ public class Main {
                 digit1 = Character.digit(chars[1],10);
                 digit2 = Character.digit(chars[3],10);
 
-                value =(digit1*100 + digit2*10) * -1;
+                value =(digit1*10 + digit2) * -1;
 
             }
 
@@ -109,7 +109,7 @@ public class Main {
             digit1 = Character.digit(chars[0],10);
             digit2 = Character.digit(chars[2],10);
 
-            value =(digit1*100 + digit2*10);
+            value =(digit1*10 + digit2);
 
         }
 
@@ -156,12 +156,12 @@ public class Main {
 
             sb.append(id)
                     .append("=")
-                    .append((double)data.min/100)
+                    .append((double)data.min/10)
                     .append("/")
-                    .append(decimalFormat.format(((double)data.total/100 / data.count)))
+                    .append(decimalFormat.format(((double)data.total/10 / data.count)))
                     .append("/")
-                    .append((double)data.max/100);
-            if (index[0] < map.size() - 1) {
+                    .append((double)data.max/10);
+            if (index[0] < map.size()) {
                 sb.append(",");//we should skip this on the last one
             }
 
