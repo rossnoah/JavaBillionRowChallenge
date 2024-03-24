@@ -12,4 +12,10 @@ public class Data {
         max = 0;
         total = 0;
     }
+    public Data(int value){
+        count =1;
+        min=value;
+        max =value;
+        total=value;
+    }
 }

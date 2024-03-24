@@ -3,6 +3,7 @@ package dev.noah;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -121,8 +122,15 @@ public class Main {
 
 
     private static void addData(Map<String, Data> map, String id, int value) {
-        Data data = map.getOrDefault(id, new Data());
 
+
+        Data data = map.get(id);
+
+        if(data==null){
+            data = new Data(value);
+            map.put(id, data);
+            return;
+        }
         data.total += value;
         data.count++;
         if (data.max < value) {
@@ -132,13 +140,12 @@ public class Main {
             data.min = value;
         }
 
-        map.put(id, data);
-
     }
 
     private static void printInfo(HashMap<String, Data> map) {
 
         StringBuilder sb = new StringBuilder("{");
+        DecimalFormat decimalFormat = new DecimalFormat("#.0");
 
 
         System.out.println("map size:" + map.keySet().size());
@@ -151,7 +158,7 @@ public class Main {
                     .append("=")
                     .append((double)data.min/100)
                     .append("/")
-                    .append(((double)data.total/100 / data.count))
+                    .append(decimalFormat.format(((double)data.total/100 / data.count)))
                     .append("/")
                     .append((double)data.max/100);
             if (index[0] < map.size() - 1) {
