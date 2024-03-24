@@ -21,6 +21,7 @@ public class Main {
 
         System.out.println("Total time in  ms " + totalTime);
 
+
     }
 
 
@@ -53,10 +54,26 @@ public class Main {
     }
 
     public static void processLine(Map<String, Data> map, String input) {
-        String[] stings = input.split(";");
-        String id = stings[0];
-        char[] chars = stings[1].toCharArray();
 
+        char[] chars = input.toCharArray();
+
+        int seperatorIndex = 0;
+        while(chars[seperatorIndex]!=';'){
+            seperatorIndex++;
+        }
+
+        String id = input.substring(0,seperatorIndex);
+        chars = input.substring(seperatorIndex+1).toCharArray();
+
+        int value = parseCharArrayToInt(chars);
+
+
+
+        addData(map, id, value);
+
+    }
+
+    public static int parseCharArrayToInt(char[] chars){
         boolean hasSign = chars[0] == '-';
 
 
@@ -67,14 +84,14 @@ public class Main {
 
         if(hasSign){
             if(chars.length==5){
-                 digit1 = chars[1];
-                 digit2 = chars[2];
-                 digit3 = chars[4];
+                digit1 = Character.digit(chars[1],10);
+                digit2 = Character.digit(chars[2],10);
+                digit3 = Character.digit(chars[4],10);
 
-                 value =(digit1*100 + digit2*10 + digit3) * -1;
+                value =(digit1*100 + digit2*10 + digit3) * -1;
             }else{
-                 digit1 = chars[1];
-                 digit2 = chars[3];
+                digit1 = Character.digit(chars[1],10);
+                digit2 = Character.digit(chars[3],10);
 
                 value =(digit1*100 + digit2*10) * -1;
 
@@ -82,22 +99,25 @@ public class Main {
 
 
         }else if (chars.length == 4) {
-            digit1 = chars[0];
-            digit2 = chars[1];
-            digit3 = chars[3];
+            digit1 = Character.digit(chars[0],10);
+            digit2 = Character.digit(chars[1],10);
+            digit3 = Character.digit(chars[3],10);
 
             value =(digit1*100 + digit2*10 + digit3) ;
         } else {
-            digit1 = chars[0];
-            digit2 = chars[2];
+            digit1 = Character.digit(chars[0],10);
+            digit2 = Character.digit(chars[2],10);
 
             value =(digit1*100 + digit2*10);
 
         }
 
-        addData(map, id, value);
+
+        return  value;
 
     }
+
+
 
 
     private static void addData(Map<String, Data> map, String id, int value) {
@@ -129,11 +149,11 @@ public class Main {
 
             sb.append(id)
                     .append("=")
-                    .append(data.min/10)
+                    .append((double)data.min/100)
                     .append("/")
-                    .append((data.total / data.count)/10)
+                    .append(((double)data.total/100 / data.count))
                     .append("/")
-                    .append(data.max/10);
+                    .append((double)data.max/100);
             if (index[0] < map.size() - 1) {
                 sb.append(",");//we should skip this on the last one
             }
