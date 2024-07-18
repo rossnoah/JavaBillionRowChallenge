@@ -1,21 +1,26 @@
 package dev.noah;
 
-public class Data {
-    public int count;
-    public int min;
-    public int max;
-    public int total;
+public class Data{
+    int count;
+    float min;
+    float max;
+    float total;
 
-    public Data(){
-        count = 0;
-        min = 0;
-        max = 0;
-        total = 0;
+    public Data(float value){
+        count = 1;
+        min = value;
+        max = value;
+        total = value;
     }
-    public Data(int value){
-        count =1;
-        min=value;
-        max =value;
-        total=value;
+
+    public void addItem(float value){
+        count++;
+        total+=value;
+        if(value<min){
+            min = value;
+        }
+        if(value>max){
+            max = value;
+        }
     }
 }

@@ -39,5 +39,8 @@ build/
 
 
 #project data file
-measurements.txt
+100m.txt
+measurements2.txt
+1b.txt
+100m.txt
 profile.html

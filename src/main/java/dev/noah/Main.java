@@ -1,6 +1,7 @@
 package dev.noah;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -9,172 +10,91 @@ import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
-
+        System.out.println("Starting...");
         long startTime = System.currentTimeMillis();
 
-        billionRowChallenge();
-
-        long endTime = System.currentTimeMillis();
-
-        long totalTime = endTime - startTime;
-
-
-        System.out.println("Total time in  ms " + totalTime);
-
-
-    }
-
-
-    public static void billionRowChallenge() {
-
-        HashMap<String, Data> map = new HashMap<>();
-
-
-        BufferedReader reader;
-
-        try {
-            reader = new BufferedReader(new FileReader("measurements.txt"));
-
-            String line = reader.readLine();
-
-            while (line != null) {
-
-                processLine(map, line);
-                line = reader.readLine();
-
-            }
-
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        printInfo(map);
-
-    }
-
-    public static void processLine(Map<String, Data> map, String input) {
-
-        char[] chars = input.toCharArray();
-
-        int seperatorIndex = 0;
-        while(chars[seperatorIndex]!=';'){
-            seperatorIndex++;
-        }
-
-        String id = input.substring(0,seperatorIndex);
-        chars = input.substring(seperatorIndex+1).toCharArray();
-
-        int value = parseCharArrayToInt(chars);
-
-
-
-        addData(map, id, value);
-
-    }
-
-    public static int parseCharArrayToInt(char[] chars){
-        boolean hasSign = chars[0] == '-';
-
-
-        int value;
-
-        int digit1, digit2, digit3;
-
-
-        if(hasSign){
-            if(chars.length==5){
-                digit1 = Character.digit(chars[1],10);
-                digit2 = Character.digit(chars[2],10);
-                digit3 = Character.digit(chars[4],10);
-
-                value =(digit1*100 + digit2*10 + digit3) * -1;
-            }else{
-                digit1 = Character.digit(chars[1],10);
-                digit2 = Character.digit(chars[3],10);
-
-                value =(digit1*10 + digit2) * -1;
-
-            }
-
-
-        }else if (chars.length == 4) {
-            digit1 = Character.digit(chars[0],10);
-            digit2 = Character.digit(chars[1],10);
-            digit3 = Character.digit(chars[3],10);
-
-            value =(digit1*100 + digit2*10 + digit3) ;
-        } else {
-            digit1 = Character.digit(chars[0],10);
-            digit2 = Character.digit(chars[2],10);
-
-            value =(digit1*10 + digit2);
-
-        }
-
-
-        return  value;
-
-    }
-
-
-
-
-    private static void addData(Map<String, Data> map, String id, int value) {
-
-
-        Data data = map.get(id);
-
-        if(data==null){
-            data = new Data(value);
-            map.put(id, data);
+        if (args.length < 1) {
+            System.out.println("You must provide the file name as an arg");
             return;
         }
-        data.total += value;
-        data.count++;
-        if (data.max < value) {
-            data.max = value;
-        }
-        if (data.min > value) {
-            data.min = value;
-        }
 
+        billionRowChallenge(args[0]);
+
+        long endTime = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+
+        System.out.println("Complete.");
+        System.out.println("Total time in  ms " + totalTime);
     }
+    public static void billionRowChallenge(String filename) {
 
-    private static void printInfo(HashMap<String, Data> map) {
+        File file = new File(filename);
 
-        StringBuilder sb = new StringBuilder("{");
-        DecimalFormat decimalFormat = new DecimalFormat("#.0");
+        int totalLines = 0;
 
+        FileReader fr = null;
+        BufferedReader br = null;
+        HashMap<String,Data> map = new HashMap<>();
 
-        System.out.println("map size:" + map.keySet().size());
+        try {
+            fr = new FileReader(file);
+            br = new BufferedReader(fr);
 
-        int[] index = {0};
-        map.forEach((id, data) -> {
-            index[0]++;
+            char[] chars = new char[100];
 
-            sb.append(id)
-                    .append("=")
-                    .append((double)data.min/10)
-                    .append("/")
-                    .append(decimalFormat.format(((double)data.total/10 / data.count)))
-                    .append("/")
-                    .append((double)data.max/10);
-            if (index[0] < map.size()) {
-                sb.append(",");//we should skip this on the last one
+            char ch;
+            int count = 0;
+
+            String key = null;
+            float value;
+            while(br.ready()){
+                ch = (char) br.read();
+
+                if(ch==';'){
+                    key = new String(chars,0,count);
+                    count=0;
+                    continue;
+                }
+                if(ch=='\n'){
+                    value = Float.parseFloat(new String(chars,0,count));
+                    count=0;
+                    Data data = map.getOrDefault(key,new Data(value));
+                    map.put(key,data);
+                    data.addItem(value);
+                    continue;
+                }
+                chars[count]=ch;
+                count++;
             }
+//            value = Float.parseFloat(new String(chars,0,count));
+//            Data data = map.getOrDefault(key,new Data(value));
+//            data.addItem(value);
 
-        });
+            br.close();
+            fr.close();
+        } catch (IOException e) {
+            e.printStackTrace();
 
-        sb.append("}");
+        }
 
 
-        System.out.println();
-        System.out.println(sb);
-        System.out.println();
+
+        System.out.println("total lines: "+totalLines );
+        //map size
+        System.out.println("map size: "+map.size());
+
+        for (Map.Entry<String, Data> entry : map.entrySet()) {
+            String key = entry.getKey();
+            Data value = entry.getValue();
+            DecimalFormat df = new DecimalFormat("#.#");
+            System.out.println(key + ":  min: " + df.format(value.min) + " max: " + df.format(value.max) + " avg: " + df.format(value.total/value.count));
+        }
+
+
+
+
+
 
     }
-
-
 }
+
