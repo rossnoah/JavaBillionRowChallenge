@@ -40,35 +40,18 @@ public class Main {
             fr = new FileReader(file);
             br = new BufferedReader(fr);
 
-            char[] chars = new char[100];
-
-            char ch;
-            int count = 0;
 
             String key = null;
+            String line = null;
             float value;
-            while(br.ready()){
-                ch = (char) br.read();
-
-                if(ch==';'){
-                    key = new String(chars,0,count);
-                    count=0;
-                    continue;
-                }
-                if(ch=='\n'){
-                    value = Float.parseFloat(new String(chars,0,count));
-                    count=0;
-                    Data data = map.getOrDefault(key,new Data(value));
-                    map.put(key,data);
-                    data.addItem(value);
-                    continue;
-                }
-                chars[count]=ch;
-                count++;
+            while((line = br.readLine())!=null){
+               String[] parts = line.split(";");
+                key = parts[0];
+                value = Float.parseFloat(parts[1]);
+                Data data = map.getOrDefault(key, new Data(value));
+                data.addItem(value);
+                map.put(key, data);
             }
-//            value = Float.parseFloat(new String(chars,0,count));
-//            Data data = map.getOrDefault(key,new Data(value));
-//            data.addItem(value);
 
             br.close();
             fr.close();
@@ -89,12 +72,6 @@ public class Main {
             DecimalFormat df = new DecimalFormat("#.#");
             System.out.println(key + ":  min: " + df.format(value.min) + " max: " + df.format(value.max) + " avg: " + df.format(value.total/value.count));
         }
-
-
-
-
-
-
     }
 }
 
